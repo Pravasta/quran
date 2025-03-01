@@ -1,5 +1,5 @@
-import 'package:architecture_project/core/theme/app_color.dart';
-import 'package:architecture_project/main.dart';
+import 'package:quran/core/theme/app_color.dart';
+import 'package:quran/main.dart';
 import 'package:flutter/material.dart';
 
 class DefaultButton extends StatelessWidget {
@@ -49,10 +49,22 @@ class DefaultButton extends StatelessWidget {
                 children: [
                   Image.asset(iconUrl!, width: 20),
                   const SizedBox(width: 10),
-                  Text(title, style: appTextTheme(context).bodyMedium),
+                  Text(
+                    title,
+                    style: appTextTheme(context).bodyMedium!.copyWith(
+                      color: titleColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               )
-              : Text(title, style: appTextTheme(context).bodyMedium),
+              : Text(
+                title,
+                style: appTextTheme(context).bodyMedium!.copyWith(
+                  color: titleColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
     );
   }
 }

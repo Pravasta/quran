@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:quran/core/routes/navigation.dart';
 
 import 'core/injection/env.dart';
 import 'core/theme/app_theme.dart';
+import 'feature/splash/view/splash_page.dart';
 
 // shortcut for app theme
 TextTheme appTextTheme(BuildContext context) => Theme.of(context).textTheme;
@@ -27,12 +29,13 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       showSemanticsDebugger: false,
-      title: 'Flutter Demo',
+      title: 'Pravasta Quran',
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,
       theme: AppTheme.lightTheme(context),
       darkTheme: AppTheme.darkTheme(context),
-      // home: SplashPage(),
+      navigatorKey: navigatorKey,
+      home: SplashPage(),
     );
   }
 }

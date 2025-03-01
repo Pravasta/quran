@@ -14,17 +14,17 @@ class AppColor {
     900: Color(0xFF111827),
   });
 
-  static const accent = MaterialColor(0xFFFFA41B, <int, Color>{
-    50: Color(0xFFFFF6E8),
-    100: Color(0xFFFFEDD1),
-    200: Color(0xFFFFE4BB),
-    300: Color(0xFFFFDBA4),
-    400: Color(0xFFFFD18D),
-    500: Color(0xFFFFC876),
-    600: Color(0xFFFFBF5F),
-    700: Color(0xFFFFB649),
-    800: Color(0xFFFFAD32),
-    900: Color(0xFFFFA41B),
+  static const accent = MaterialColor(0xffF9B091, <int, Color>{
+    50: Color(0xFFFFF2F0),
+    100: Color(0xFFFFE6DC),
+    200: Color(0xFFFFD6C2),
+    300: Color(0xFFFFC6A8),
+    400: Color(0xFFFFB89A),
+    500: Color(0xFFF9B091),
+    600: Color(0xFFF8A78A),
+    700: Color(0xFFF69D7F),
+    800: Color(0xFFF49375),
+    900: Color(0xFFF18363),
   });
 
   static const black = MaterialColor(0xFF111827, <int, Color>{
@@ -40,25 +40,25 @@ class AppColor {
     900: Color(0xFF111827),
   });
 
-  static const MaterialColor primary = MaterialColor(0xFF6A2FA9, <int, Color>{
-    50: Color(0xFFEDE6F5),
-    100: Color(0xFFD2C1E5),
-    200: Color(0xFFB597D4),
-    300: Color(0xFF976DC3),
-    400: Color(0xFF804EB6),
-    500: Color(0xFF6A2FA9),
-    600: Color(0xFF622AA2),
-    700: Color(0xFF572398),
-    800: Color(0xFF4D1D8F),
-    900: Color(0xFF3C127E),
+  static const MaterialColor primary = MaterialColor(0xff040c23, <int, Color>{
+    50: Color(0xFFE6D9FF),
+    100: Color(0xFF863ED5),
+    200: Color(0xFF040c23),
+    300: Color(0xFF040c23),
+    400: Color(0xFF040c23),
+    500: Color(0xFF040c23),
+    600: Color(0xFF040c23),
+    700: Color(0xFF040c23),
+    800: Color(0xFF040c23),
+    900: Color(0xFF121930),
   });
 
   static const MaterialColor primaryAccent =
-      MaterialColor(0xFF6A2FA9, <int, Color>{
-        100: Color(0xFFCDB3FF),
-        200: Color(0xFF6A2FA9),
-        400: Color(0xFF8A4DFF),
-        700: Color(0xFF7A33FF),
+      MaterialColor(0xff863ED5, <int, Color>{
+        100: Color(0xFFDF98FA),
+        200: Color(0xFF863ED5),
+        400: Color(0xFF9055FF),
+        700: Color(0xFF808CFF),
       });
 
   static const MaterialColor secondary = MaterialColor(0xFFF9AA68, <int, Color>{

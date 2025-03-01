@@ -1,0 +1,134 @@
+import 'package:flutter/material.dart';
+import 'package:quran/core/extensions/build_context_ext.dart';
+import 'package:quran/core/routes/navigation.dart';
+import 'package:quran/core/theme/app_color.dart';
+import 'package:quran/core/utils/assets.gen.dart';
+import 'package:quran/feature/detail_surah/view/detail_surah_page.dart';
+import 'package:quran/main.dart';
+
+import 'widget/quran_list_widget.dart';
+
+class HomeView extends StatelessWidget {
+  const HomeView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    AppBar appBar() {
+      return AppBar(
+        title: Text('Quran App', style: appTextTheme(context).displaySmall),
+        automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search, color: AppColor.neutral[400], size: 30),
+            onPressed: () {
+              // Navigator.pushNamed(context, '/search-page');
+            },
+          ),
+          SizedBox(width: 10),
+        ],
+      );
+    }
+
+    Widget contentHeader() {
+      return Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Container(
+          width: context.deviceWidth,
+          padding: EdgeInsets.only(left: 20, top: 20),
+          height: context.deviceHeight * 0.18,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: [
+                AppColor.primaryAccent[400]!,
+                AppColor.primaryAccent[100]!,
+              ],
+            ),
+          ),
+          child: Stack(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.menu_book_outlined,
+                        color: AppColor.white,
+                        size: 20,
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        'Last Read',
+                        style: appTextTheme(
+                          context,
+                        ).titleMedium!.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Al-Fatihah',
+                        style: appTextTheme(context).titleLarge!.copyWith(
+                          color: AppColor.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      Text(
+                        'Ayat No. 1',
+                        style: appTextTheme(context).titleSmall!.copyWith(
+                          color: AppColor.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                    ],
+                  ),
+                ],
+              ),
+              Positioned(
+                right: 0,
+                bottom: 0,
+                child: Image.asset(Assets.images.appQuran.path, scale: 3.8),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    Widget contentSurah() {
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: ListView.builder(
+          physics: NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: 10,
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              onTap:
+                  () => Navigation.push(
+                    DetailSurahPage(),
+                    DetailSurahPage.routeSettings,
+                  ),
+              child: QuranListWidget(),
+            );
+          },
+        ),
+      );
+    }
+
+    return Scaffold(
+      appBar: appBar(),
+      body: SingleChildScrollView(
+        child: Column(children: [contentHeader(), contentSurah()]),
+      ),
+    );
+  }
+}

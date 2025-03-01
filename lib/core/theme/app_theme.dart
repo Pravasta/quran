@@ -1,6 +1,6 @@
-import 'package:architecture_project/core/theme/app_color.dart';
-import 'package:architecture_project/core/theme/app_color_scheme.dart';
-import 'package:architecture_project/core/theme/app_text.dart';
+import 'package:quran/core/theme/app_color.dart';
+import 'package:quran/core/theme/app_color_scheme.dart';
+import 'package:quran/core/theme/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -12,6 +12,9 @@ class AppTheme {
       colorScheme: ApptColorScheme.light,
       scaffoldBackgroundColor: AppColor.black[50],
       appBarTheme: const AppBarTheme(
+        backgroundColor: AppColor.white,
+        surfaceTintColor: AppColor.white,
+        shadowColor: AppColor.white,
         systemOverlayStyle: SystemUiOverlayStyle(
           // Status bar color
           statusBarColor: AppColor.primary,
@@ -19,6 +22,11 @@ class AppTheme {
           statusBarIconBrightness: Brightness.light, // For Android (dark icons)
           statusBarBrightness: Brightness.light, // For iOS (dark icons)
         ),
+      ),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: AppColor.white,
+        selectedItemColor: AppColor.primaryAccent,
+        unselectedItemColor: AppColor.neutral[500],
       ),
       useMaterial3: true,
     );
@@ -31,6 +39,9 @@ class AppTheme {
       colorScheme: ApptColorScheme.dark,
       scaffoldBackgroundColor: AppColor.primary,
       appBarTheme: const AppBarTheme(
+        backgroundColor: AppColor.primary,
+        surfaceTintColor: AppColor.primary,
+        shadowColor: AppColor.primary,
         systemOverlayStyle: SystemUiOverlayStyle(
           // Status bar color
           statusBarColor: AppColor.primary,
@@ -40,6 +51,11 @@ class AppTheme {
         ),
       ),
       useMaterial3: true,
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: AppColor.primary[900],
+        selectedItemColor: AppColor.primaryAccent,
+        unselectedItemColor: AppColor.neutral[500],
+      ),
     );
   }
 }

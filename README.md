@@ -1,4 +1,4 @@
-# architecture_project
+# quran
 
 A new Flutter project.
 

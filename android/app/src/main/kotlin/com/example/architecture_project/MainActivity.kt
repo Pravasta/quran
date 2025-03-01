@@ -1,4 +1,4 @@
-package com.example.architecture_project
+package com.pravasta.quran
 
 import io.flutter.embedding.android.FlutterActivity
 

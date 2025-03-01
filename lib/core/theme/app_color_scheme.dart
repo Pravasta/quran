@@ -1,14 +1,14 @@
-import 'package:architecture_project/core/theme/app_color.dart';
+import 'package:quran/core/theme/app_color.dart';
 import 'package:flutter/material.dart';
 
 class ApptColorScheme {
-  static const light = ColorScheme(
+  static final light = ColorScheme(
     brightness: Brightness.light,
     primary: AppColor.primary,
     onPrimary: AppColor.white,
-    // primaryContainer: Color(0xFFF0DBFF),
+    primaryContainer: AppColor.white,
     // onPrimaryContainer: Color(0xFF2C0051),
-    secondary: AppColor.secondary,
+    secondary: AppColor.neutral[500]!,
     onSecondary: AppColor.white,
     // secondaryContainer: Color(0xFFEDDDF6),
     // onSecondaryContainer: Color(0xFF211829),
@@ -32,16 +32,16 @@ class ApptColorScheme {
     // surfaceTint: Color(0xFF7D3EB9),
     // scrim: Color(0xFF000000),
     background: Color(0xFFFFFFFF),
-    onBackground: Color(0xFF1D1B1E),
+    onBackground: AppColor.white,
   );
 
-  static const dark = ColorScheme(
+  static final dark = ColorScheme(
     brightness: Brightness.light,
-    primary: AppColor.primary,
+    primary: AppColor.white,
     onPrimary: AppColor.white,
-    // primaryContainer: Color(0xFFF0DBFF),
+    primaryContainer: AppColor.primary[900],
     // onPrimaryContainer: Color(0xFF2C0051),
-    secondary: AppColor.secondary,
+    secondary: AppColor.neutral[500]!,
     onSecondary: AppColor.white,
     // secondaryContainer: Color(0xFFEDDDF6),
     // onSecondaryContainer: Color(0xFF211829),
@@ -65,6 +65,6 @@ class ApptColorScheme {
     // surfaceTint: Color(0xFF7D3EB9),
     // scrim: Color(0xFF000000),
     background: Color(0xFFFFFFFF),
-    onBackground: Color(0xFF1D1B1E),
+    onBackground: AppColor.primary,
   );
 }
