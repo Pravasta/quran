@@ -12,6 +12,7 @@ class AppTheme {
       colorScheme: ApptColorScheme.light,
       scaffoldBackgroundColor: AppColor.black[50],
       appBarTheme: const AppBarTheme(
+        elevation: 0,
         backgroundColor: AppColor.white,
         surfaceTintColor: AppColor.white,
         shadowColor: AppColor.white,
@@ -39,6 +40,7 @@ class AppTheme {
       colorScheme: ApptColorScheme.dark,
       scaffoldBackgroundColor: AppColor.primary,
       appBarTheme: const AppBarTheme(
+        elevation: 0,
         backgroundColor: AppColor.primary,
         surfaceTintColor: AppColor.primary,
         shadowColor: AppColor.primary,

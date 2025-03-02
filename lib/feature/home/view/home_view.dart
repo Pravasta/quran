@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quran/core/components/app_shimmer.dart';
 import 'package:quran/core/extensions/build_context_ext.dart';
 import 'package:quran/core/routes/navigation.dart';
 import 'package:quran/core/theme/app_color.dart';
 import 'package:quran/core/utils/assets.gen.dart';
 import 'package:quran/feature/detail_surah/view/detail_surah_page.dart';
+import 'package:quran/feature/home/logic/get_all_surah/get_all_surah_cubit.dart';
 import 'package:quran/main.dart';
 
 import 'widget/quran_list_widget.dart';
@@ -104,23 +107,46 @@ class HomeView extends StatelessWidget {
     }
 
     Widget contentSurah() {
-      return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
-        child: ListView.builder(
-          physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: 10,
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              onTap:
-                  () => Navigation.push(
-                    DetailSurahPage(),
-                    DetailSurahPage.routeSettings,
-                  ),
-              child: QuranListWidget(),
+      return BlocBuilder<GetAllSurahCubit, GetAllSurahState>(
+        builder: (context, state) {
+          if (state.status == GetAllSurahStatus.loading) {
+            return Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: AppShimmer(
+                context.deviceHeight * 1 / 2,
+                context.deviceWidth,
+                15,
+              ),
             );
-          },
-        ),
+          }
+          if (state.status == GetAllSurahStatus.error) {
+            return Center(child: Text('Error'));
+          }
+          if (state.status == GetAllSurahStatus.loaded) {
+            final surahs = state.surah!;
+
+            return Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: surahs.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap:
+                        () => Navigation.push(
+                          DetailSurahPage(),
+                          DetailSurahPage.routeSettings,
+                        ),
+                    child: QuranListWidget(surah: surahs[index]),
+                  );
+                },
+              ),
+            );
+          }
+
+          return SizedBox();
+        },
       );
     }
 
