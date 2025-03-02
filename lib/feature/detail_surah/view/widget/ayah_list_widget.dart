@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:quran/core/extensions/build_context_ext.dart';
+import 'package:quran/core/repositories/get_detail_surah_response_model.dart';
 import 'package:quran/core/theme/app_color.dart';
 import 'package:quran/main.dart';
 
 import '../../../../core/utils/assets.gen.dart';
 
 class AyahListWidget extends StatelessWidget {
-  const AyahListWidget({super.key});
+  const AyahListWidget({super.key, required this.ayat});
+
+  final Ayat ayat;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +17,7 @@ class AyahListWidget extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 10),
       width: context.deviceWidth,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             width: context.deviceWidth,
@@ -36,7 +39,10 @@ class AyahListWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Center(
-                    child: Text('1', style: appTextTheme(context).bodyLarge),
+                    child: Text(
+                      '${ayat.nomorAyat}',
+                      style: appTextTheme(context).bodyLarge,
+                    ),
                   ),
                 ),
                 Row(
@@ -59,16 +65,27 @@ class AyahListWidget extends StatelessWidget {
           ),
           SizedBox(height: 20),
           // arabic text basmallah
-          Text(
-            'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
-            style: appTextTheme(
-              context,
-            ).displayMedium!.copyWith(fontWeight: FontWeight.w500),
-            textAlign: TextAlign.right,
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Text(
+              '${ayat.teksArab}',
+              style: appTextTheme(
+                context,
+              ).displayMedium!.copyWith(fontWeight: FontWeight.w500),
+              textAlign: TextAlign.right,
+              textDirection: TextDirection.rtl,
+            ),
           ),
           SizedBox(height: 20),
           Text(
-            '[All] praise is [due] to Allah, Lord of the worlds,',
+            '${ayat.teksLatin}',
+            style: appTextTheme(context).bodyMedium!.copyWith(
+              color: appColorScheme(context).primary,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            '${ayat.teksIndonesia}',
             style: appTextTheme(context).bodyMedium!.copyWith(
               color: AppColor.neutral,
               fontWeight: FontWeight.bold,

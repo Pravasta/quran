@@ -3,11 +3,15 @@ import 'package:quran/core/exception/app_exception.dart';
 import 'package:quran/core/exception/met_exception_handler.dart';
 import 'package:quran/core/network/http_client.dart';
 import 'package:quran/core/network/network_logger.dart';
+import 'package:quran/core/repositories/get_code_location_response_model.dart';
+import 'package:quran/core/repositories/get_detail_surah_response_model.dart';
 import 'package:quran/core/repositories/list_surah_response_model.dart';
 import 'package:quran/core/repositories/meta_response_model.dart';
 
 abstract class ApiService {
   Future<ListSurahResponseModel> getListSurah();
+  Future<GetDetailSurahResponseModel> getDetailSurah(int surahNumber);
+  Future<GetCodeLocationResponseModel> getCodeLocation(String location);
 }
 
 class ApiServiceImpl implements ApiService {
@@ -34,17 +38,64 @@ class ApiServiceImpl implements ApiService {
       } else {
         MetaResponse metaResponse = MetaResponse.fromJson(response.body);
         if (metaResponse.errorCode != 200) {
-          throw MetaExceptionHandler(
+          MetaExceptionHandler(
             response.statusCode,
             response.body,
           ).handleByErrorCode();
-        } else {
-          // throw AppException(metaResponse.message ?? "Unknown Error");
-          throw AppException("Unknown Coba");
         }
+        throw AppException(metaResponse.message ?? "Unknown Error");
       }
     } catch (e) {
-      throw AppException(e.toString());
+      throw AppException(e.toString()).message;
+    }
+  }
+
+  @override
+  Future<GetDetailSurahResponseModel> getDetailSurah(int surahNumber) async {
+    final url = _endpoint.getDetailSurah(surahNumber);
+    final headers = {'Content-Type': 'application/json'};
+
+    try {
+      final response = await _httpClient.get(url, headers);
+
+      appNetworkLogger(
+        endpoint: url.toString(),
+        payload: headers.toString(),
+        response: response.body.toString(),
+      );
+
+      if (response.statusCode == 200) {
+        return GetDetailSurahResponseModel.fromJson(response.body);
+      }
+
+      MetaResponse metaResponse = MetaResponse.fromJson(response.body);
+      if (metaResponse.errorCode != 200) {
+        MetaExceptionHandler(
+          response.statusCode,
+          response.body,
+        ).handleByErrorCode();
+      }
+
+      throw AppException(metaResponse.message ?? "Unknown Error");
+    } catch (e) {
+      throw AppException(e.toString()).message;
+    }
+  }
+
+  @override
+  Future<GetCodeLocationResponseModel> getCodeLocation(String location) async {
+    final url = _endpoint.getCodeLocation(location);
+    final headers = {'Content-Type': 'application/json'};
+
+    try {
+      final response = await _httpClient.get(url, headers);
+      if (response.statusCode == 200) {
+        return GetCodeLocationResponseModel.fromJson(response.body);
+      }
+
+      throw AppException("Unknown Error").message;
+    } catch (e) {
+      throw AppException(e.toString()).message;
     }
   }
 

@@ -11,9 +11,14 @@ import 'package:quran/main.dart';
 
 import 'widget/quran_list_widget.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
 
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     AppBar appBar() {
@@ -120,7 +125,7 @@ class HomeView extends StatelessWidget {
             );
           }
           if (state.status == GetAllSurahStatus.error) {
-            return Center(child: Text('Error'));
+            return Center(child: Text(state.message!));
           }
           if (state.status == GetAllSurahStatus.loaded) {
             final surahs = state.surah!;
@@ -135,7 +140,7 @@ class HomeView extends StatelessWidget {
                   return GestureDetector(
                     onTap:
                         () => Navigation.push(
-                          DetailSurahPage(),
+                          DetailSurahPage(surahNumber: surahs[index].nomor!),
                           DetailSurahPage.routeSettings,
                         ),
                     child: QuranListWidget(surah: surahs[index]),

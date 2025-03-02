@@ -14,11 +14,11 @@ class MetaExceptionHandler {
 
     switch (statusCode) {
       case 400:
-        throw AppException(message);
+        throw AppException(message).message;
       case 401:
-        throw TokenExpired();
+        throw TokenExpired().message;
       default:
-        throw AppException(message);
+        throw AppException(message).message;
     }
   }
 }

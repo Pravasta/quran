@@ -22,6 +22,14 @@ class Endpoint {
     );
   }
 
+  Uri getCodeLocation(String location) {
+    return UriHelper.createUrl(
+      host: 'api.myquran.com',
+      path: 'v2/sholat/kota/cari/$location',
+      queryParameters: {},
+    );
+  }
+
   factory Endpoint.baseURLAdmin() {
     return Endpoint(baseURL: "wa.me");
   }

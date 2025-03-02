@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quran/core/extensions/build_context_ext.dart';
+import 'package:quran/feature/detail_surah/logic/detail_surah/detail_surah_cubit.dart';
 
+import '../../../core/components/app_shimmer.dart';
+import '../../../core/repositories/get_detail_surah_response_model.dart';
 import '../../../core/theme/app_color.dart';
 import '../../../core/utils/assets.gen.dart';
 import '../../../main.dart';
@@ -18,7 +22,7 @@ class DetailSurahView extends StatelessWidget {
       );
     }
 
-    Widget contentHeader() {
+    Widget contentHeader(DetailSurah? data) {
       return Padding(
         padding: EdgeInsets.all(20),
         child: Container(
@@ -44,14 +48,14 @@ class DetailSurahView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Al-Fatihah',
+                      data!.namaLatin ?? '',
                       style: appTextTheme(context).displayMedium!.copyWith(
                         color: AppColor.white,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      'Pembukaan',
+                      data.arti ?? '',
                       style: appTextTheme(context).headlineSmall!.copyWith(
                         color: AppColor.white,
                         fontWeight: FontWeight.bold,
@@ -59,19 +63,27 @@ class DetailSurahView extends StatelessWidget {
                     ),
                     SizedBox(),
                     Text(
-                      'Meccan - 7 Ayat',
+                      '${data.tempatTurun} - ${data.jumlahAyat} Ayat',
                       style: appTextTheme(
                         context,
                       ).titleMedium!.copyWith(fontWeight: FontWeight.bold),
                     ),
                     SizedBox(),
-                    Text(
-                      'Ayat 1',
-                      style: appTextTheme(context).displayMedium!.copyWith(
-                        color: AppColor.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    data.nomor == 1
+                        ? Text(
+                          data.nama ?? '',
+                          style: appTextTheme(context).displayMedium!.copyWith(
+                            color: AppColor.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                        : Text(
+                          'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
+                          style: appTextTheme(context).displayMedium!.copyWith(
+                            color: AppColor.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                     SizedBox(height: 20),
                   ],
                 ),
@@ -90,7 +102,7 @@ class DetailSurahView extends StatelessWidget {
       );
     }
 
-    Widget contentAyah() {
+    Widget contentAyah(DetailSurah? data) {
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 20),
         child: ListView.builder(
@@ -98,7 +110,8 @@ class DetailSurahView extends StatelessWidget {
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
-            return AyahListWidget();
+            final Ayat ayat = data!.ayat![index];
+            return AyahListWidget(ayat: ayat);
           },
         ),
       );
@@ -106,8 +119,37 @@ class DetailSurahView extends StatelessWidget {
 
     return Scaffold(
       appBar: appBar(),
-      body: SingleChildScrollView(
-        child: Column(children: [contentHeader(), contentAyah()]),
+      body: BlocBuilder<DetailSurahCubit, DetailSurahState>(
+        builder: (context, state) {
+          if (state.status == DetailSurahStatus.error) {
+            return Container(
+              padding: EdgeInsets.all(20),
+              width: context.deviceWidth,
+              height: context.deviceHeight,
+              child: Center(
+                child: Text(
+                  state.message!,
+                  style: appTextTheme(context).displaySmall,
+                ),
+              ),
+            );
+          }
+          if (state.status == DetailSurahStatus.loading) {
+            return Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: AppShimmer(context.deviceHeight, context.deviceWidth, 15),
+            );
+          }
+
+          if (state.status == DetailSurahStatus.loaded) {
+            final data = state.detailSurah;
+            return SingleChildScrollView(
+              child: Column(children: [contentHeader(data), contentAyah(data)]),
+            );
+          }
+
+          return SizedBox();
+        },
       ),
     );
   }
