@@ -30,6 +30,14 @@ class Endpoint {
     );
   }
 
+  Uri getJadwalSholat(String code, int tahun, int bulan, int tanggal) {
+    return UriHelper.createUrl(
+      host: 'api.myquran.com',
+      path: 'v2/sholat/jadwal/$code/$tahun/$bulan/$tanggal',
+      queryParameters: {},
+    );
+  }
+
   factory Endpoint.baseURLAdmin() {
     return Endpoint(baseURL: "wa.me");
   }
