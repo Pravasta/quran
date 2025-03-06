@@ -11,7 +11,7 @@ class GetJadwalSholatByLocationCubit
 
   final PrayRepository _repository;
 
-  void getJadwalSholatByLocation(String code) async {
+  void getJadwalSholatByLocation(String location) async {
     final dateTime = DateTime.now();
     final tahun = dateTime.year;
     final bulan = dateTime.month;
@@ -19,8 +19,11 @@ class GetJadwalSholatByLocationCubit
 
     emit(state.copyWith(status: GetJadwalSholatByLocationStatus.loading));
     try {
+      final codeLocationRepo = await _repository.getCodeLocation(location);
+      final codeLocation = codeLocationRepo[0].id;
+
       final result = await _repository.getJadwalByLocation(
-        code,
+        codeLocation ?? '',
         tahun,
         bulan,
         tanggal,

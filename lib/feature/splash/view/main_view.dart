@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quran/core/theme/app_color.dart';
-import 'package:quran/feature/splash/logic/counter_bottom_navigation_cubit.dart';
+import 'package:quran/feature/splash/logic/counter_bottom_navigation_cubit/counter_bottom_navigation_cubit.dart';
 
 import '../model/main_model.dart';
 
@@ -19,6 +19,7 @@ class MainView extends StatelessWidget {
               .elementAt(currentIndex),
           bottomNavigationBar: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
+
             showSelectedLabels: false,
             currentIndex: currentIndex,
             onTap: (index) {

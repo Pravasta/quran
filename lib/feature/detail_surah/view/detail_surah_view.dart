@@ -17,7 +17,7 @@ class DetailSurahView extends StatelessWidget {
   Widget build(BuildContext context) {
     AppBar appBar() {
       return AppBar(
-        title: Text('Al-Fatihah', style: appTextTheme(context).displaySmall),
+        title: Text('Detail Surat', style: appTextTheme(context).displaySmall),
         leading: BackButton(color: appColorScheme(context).onPrimary),
       );
     }
@@ -106,11 +106,11 @@ class DetailSurahView extends StatelessWidget {
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 20),
         child: ListView.builder(
-          itemCount: 7,
+          itemCount: data!.ayat!.length,
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
-            final Ayat ayat = data!.ayat![index];
+            final Ayat ayat = data.ayat![index];
             return AyahListWidget(ayat: ayat);
           },
         ),

@@ -25,15 +25,6 @@ class _HomeViewState extends State<HomeView> {
       return AppBar(
         title: Text('Quran App', style: appTextTheme(context).displaySmall),
         automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search, color: AppColor.neutral[400], size: 30),
-            onPressed: () {
-              // Navigator.pushNamed(context, '/search-page');
-            },
-          ),
-          SizedBox(width: 10),
-        ],
       );
     }
 
@@ -71,9 +62,10 @@ class _HomeViewState extends State<HomeView> {
                       SizedBox(width: 10),
                       Text(
                         'Last Read',
-                        style: appTextTheme(
-                          context,
-                        ).titleMedium!.copyWith(fontWeight: FontWeight.bold),
+                        style: appTextTheme(context).titleMedium!.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: AppColor.white,
+                        ),
                       ),
                     ],
                   ),

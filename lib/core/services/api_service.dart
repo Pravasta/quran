@@ -96,6 +96,13 @@ class ApiServiceImpl implements ApiService {
 
     try {
       final response = await _httpClient.get(url, headers);
+
+      appNetworkLogger(
+        endpoint: url.toString(),
+        payload: headers.toString(),
+        response: response.body.toString(),
+      );
+
       if (response.statusCode == 200) {
         return GetCodeLocationResponseModel.fromJson(response.body);
       }
@@ -118,6 +125,12 @@ class ApiServiceImpl implements ApiService {
 
     try {
       final response = await _httpClient.get(url, headers);
+
+      appNetworkLogger(
+        endpoint: url.toString(),
+        payload: headers.toString(),
+        response: response.body.toString(),
+      );
 
       if (response.statusCode == 200) {
         return GetJadwalSholatResponseModel.fromJson(response.body);

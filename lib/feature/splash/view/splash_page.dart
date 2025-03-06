@@ -1,14 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quran/core/components/app_button.dart';
 import 'package:quran/core/extensions/build_context_ext.dart';
 import 'package:quran/core/routes/navigation.dart';
 import 'package:quran/core/theme/app_color.dart';
 import 'package:quran/core/utils/assets.gen.dart';
+import 'package:quran/feature/splash/logic/location_init_cubit/location_init_cubit.dart';
 import 'package:quran/feature/splash/view/main_page.dart';
 import 'package:quran/main.dart';
 
-class SplashPage extends StatelessWidget {
+class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
+
+  @override
+  State<SplashPage> createState() => _SplashPageState();
+}
+
+class _SplashPageState extends State<SplashPage> {
+  @override
+  void initState() {
+    context.read<LocationInitCubit>().getCurrentLocation();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

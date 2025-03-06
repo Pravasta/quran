@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quran/core/components/app_top_snackbar.dart';
 import 'package:quran/core/extensions/build_context_ext.dart';
+import 'package:quran/core/logic/audio_player/audio_player_cubit.dart';
 import 'package:quran/core/repositories/get_detail_surah_response_model.dart';
 import 'package:quran/core/theme/app_color.dart';
 import 'package:quran/main.dart';
@@ -45,26 +48,64 @@ class AyahListWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.play_arrow_outlined,
-                      color: AppColor.primaryAccent,
-                      size: 30,
-                    ),
-                    SizedBox(width: 10),
-                    Icon(
-                      Icons.bookmark_border_outlined,
-                      color: AppColor.primaryAccent,
-                      size: 30,
-                    ),
-                  ],
+                BlocConsumer<AudioPlayerCubit, AudioPlayerState>(
+                  listener: (context, state) {
+                    if (state.message != null) {
+                      AppTopSnackBar(context).showDanger(state.message ?? '');
+                    }
+                  },
+                  builder: (context, state) {
+                    final isPlaying =
+                        state.isPlaying &&
+                        state.currentAyatId == ayat.nomorAyat;
+
+                    return Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () async {
+                            if (state.isPlaying) {
+                              context.read<AudioPlayerCubit>().pause();
+                            } else {
+                              context.read<AudioPlayerCubit>().play(
+                                ayat.nomorAyat!,
+                                ayat.audio!.the05 ?? '',
+                              );
+                            }
+                          },
+                          child: Icon(
+                            isPlaying ? Icons.pause : Icons.play_arrow_outlined,
+                            color: AppColor.primaryAccent,
+                            size: 30,
+                          ),
+                        ),
+                        isPlaying ? SizedBox(width: 10) : SizedBox(),
+                        if (isPlaying)
+                          GestureDetector(
+                            onTap: () {
+                              context.read<AudioPlayerCubit>().stop();
+                            },
+                            child: Icon(
+                              Icons.stop,
+                              color: AppColor.primaryAccent,
+                            ),
+                          )
+                        else
+                          SizedBox(),
+                        SizedBox(width: 10),
+                        Icon(
+                          Icons.bookmark_border_outlined,
+                          color: AppColor.primaryAccent,
+                          size: 30,
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ],
             ),
           ),
           SizedBox(height: 20),
-          // arabic text basmallah
+
           Align(
             alignment: Alignment.bottomRight,
             child: Text(

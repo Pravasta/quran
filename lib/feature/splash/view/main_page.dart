@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quran/feature/splash/logic/counter_bottom_navigation_cubit.dart';
+import 'package:quran/feature/splash/logic/counter_bottom_navigation_cubit/counter_bottom_navigation_cubit.dart';
 import 'package:quran/feature/splash/view/main_view.dart';
 
 class MainPage extends StatelessWidget {
@@ -11,7 +11,7 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => CounterBottomNavigationCubit(),
+      create: (_) => CounterBottomNavigationCubit(),
       child: MainView(),
     );
   }
