@@ -3,5 +3,4 @@ abstract class SharedPrefService {
   Future<String?> getSharedPref(String key);
   Future<void> removeSharedPref(String key);
   Future<void> clearSharedPref();
-  // get user data
 }

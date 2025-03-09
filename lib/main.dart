@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quran/core/logic/audio_player/audio_player_cubit.dart';
+import 'package:quran/feature/detail_surah/logic/audio_player/audio_player_cubit.dart';
 import 'package:quran/core/routes/navigation.dart';
 import 'package:quran/core/services/audio_service.dart';
 
 import 'core/injection/env.dart';
 import 'core/theme/app_theme.dart';
+import 'feature/detail_surah/logic/add_last_read/add_last_read_cubit.dart';
+import 'feature/detail_surah/repository/detail_surah_repository.dart';
+import 'feature/home/logic/get_last_read/get_last_read_cubit.dart';
+import 'feature/home/repository/home_repository.dart';
 import 'feature/splash/logic/location_init_cubit/location_init_cubit.dart';
 import 'feature/splash/repository/init_location_repository.dart';
 import 'feature/splash/view/splash_page.dart';
@@ -39,6 +43,14 @@ class _MyAppState extends State<MyApp> {
         ),
         BlocProvider(
           create: (_) => AudioPlayerCubit(AudioServiceImpl.create()),
+        ),
+        BlocProvider(
+          create:
+              (_) =>
+                  GetLastReadCubit(HomeRepositoryImpl.create())..getLastRead(),
+        ),
+        BlocProvider(
+          create: (_) => AddLastReadCubit(DetailSurahRepositoryImpl.create()),
         ),
       ],
       child: MaterialApp(

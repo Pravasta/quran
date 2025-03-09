@@ -9,10 +9,14 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<GetAllSurahCubit>(
-      create:
-          (context) =>
-              GetAllSurahCubit(HomeRepositoryImpl.create())..getAllSurah(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<GetAllSurahCubit>(
+          create:
+              (_) =>
+                  GetAllSurahCubit(HomeRepositoryImpl.create())..getAllSurah(),
+        ),
+      ],
       child: HomeView(),
     );
   }

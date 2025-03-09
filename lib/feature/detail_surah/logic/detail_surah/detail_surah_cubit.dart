@@ -9,12 +9,20 @@ class DetailSurahCubit extends Cubit<DetailSurahState> {
 
   final DetailSurahRepository _repository;
 
+  final List<Ayat> listSurahAyat = [];
+
   void getDetailSurah(int surahNumber) async {
     emit(state.copyWith(status: DetailSurahStatus.loading));
     try {
       final result = await _repository.getDetailSurah(surahNumber);
+      listSurahAyat.addAll(result.ayat ?? []);
+
       emit(
-        state.copyWith(status: DetailSurahStatus.loaded, detailSurah: result),
+        state.copyWith(
+          status: DetailSurahStatus.loaded,
+          detailSurah: result,
+          ayat: listSurahAyat,
+        ),
       );
     } catch (e) {
       emit(

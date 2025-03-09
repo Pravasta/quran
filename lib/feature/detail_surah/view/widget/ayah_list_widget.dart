@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quran/core/components/app_top_snackbar.dart';
 import 'package:quran/core/extensions/build_context_ext.dart';
-import 'package:quran/core/logic/audio_player/audio_player_cubit.dart';
+import 'package:quran/feature/detail_surah/logic/audio_player/audio_player_cubit.dart';
 import 'package:quran/core/repositories/get_detail_surah_response_model.dart';
 import 'package:quran/core/theme/app_color.dart';
 import 'package:quran/main.dart';

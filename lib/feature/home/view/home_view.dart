@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quran/core/components/app_shimmer.dart';
+import 'package:quran/core/components/app_top_snackbar.dart';
 import 'package:quran/core/extensions/build_context_ext.dart';
 import 'package:quran/core/routes/navigation.dart';
-import 'package:quran/core/theme/app_color.dart';
-import 'package:quran/core/utils/assets.gen.dart';
 import 'package:quran/feature/detail_surah/view/detail_surah_page.dart';
 import 'package:quran/feature/home/logic/get_all_surah/get_all_surah_cubit.dart';
+import 'package:quran/feature/home/logic/get_last_read/get_last_read_cubit.dart';
+import 'package:quran/feature/home/view/widget/header_widget.dart';
 import 'package:quran/main.dart';
 
 import 'widget/quran_list_widget.dart';
@@ -29,77 +30,46 @@ class _HomeViewState extends State<HomeView> {
     }
 
     Widget contentHeader() {
-      return Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Container(
-          width: context.deviceWidth,
-          padding: EdgeInsets.only(left: 20, top: 20),
-          height: context.deviceHeight * 0.18,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            gradient: LinearGradient(
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
-              colors: [
-                AppColor.primaryAccent[400]!,
-                AppColor.primaryAccent[100]!,
-              ],
-            ),
-          ),
-          child: Stack(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.menu_book_outlined,
-                        color: AppColor.white,
-                        size: 20,
-                      ),
-                      SizedBox(width: 10),
-                      Text(
-                        'Last Read',
-                        style: appTextTheme(context).titleMedium!.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: AppColor.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Al-Fatihah',
-                        style: appTextTheme(context).titleLarge!.copyWith(
-                          color: AppColor.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 5),
-                      Text(
-                        'Ayat No. 1',
-                        style: appTextTheme(context).titleSmall!.copyWith(
-                          color: AppColor.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                    ],
-                  ),
-                ],
+      return BlocBuilder<GetLastReadCubit, GetLastReadState>(
+        builder: (context, state) {
+          if (state.status == GetLastReadStatus.loading) {
+            return Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: AppShimmer(
+                context.deviceHeight * 0.18,
+                context.deviceWidth,
+                15,
               ),
-              Positioned(
-                right: 0,
-                bottom: 0,
-                child: Image.asset(Assets.images.appQuran.path, scale: 3.8),
+            );
+          }
+
+          if (state.status == GetLastReadStatus.error) {
+            return GestureDetector(
+              onTap: () {
+                AppTopSnackBar(context).showDanger('Last read not found');
+              },
+              child: HeaderWidget(),
+            );
+          }
+
+          if (state.status == GetLastReadStatus.loaded) {
+            final lastRead = state.lastRead!;
+
+            return GestureDetector(
+              onTap:
+                  () => Navigation.push(
+                    DetailSurahPage(surahNumber: lastRead.nomorSurat!),
+                    DetailSurahPage.routeSettings,
+                  ),
+              child: HeaderWidget(
+                nameSurah: lastRead.namaSurat,
+                noAyat: lastRead.nomorAyat,
               ),
-            ],
-          ),
-        ),
+            );
+          }
+
+          return SizedBox();
+        },
       );
     }
 

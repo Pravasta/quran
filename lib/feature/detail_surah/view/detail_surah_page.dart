@@ -15,11 +15,15 @@ class DetailSurahPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<DetailSurahCubit>(
-      create:
-          (context) =>
-              DetailSurahCubit(DetailSurahRepositoryImpl.create())
-                ..getDetailSurah(surahNumber),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<DetailSurahCubit>(
+          create:
+              (context) =>
+                  DetailSurahCubit(DetailSurahRepositoryImpl.create())
+                    ..getDetailSurah(surahNumber),
+        ),
+      ],
       child: DetailSurahView(),
     );
   }

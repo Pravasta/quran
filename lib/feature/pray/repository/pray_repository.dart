@@ -1,6 +1,6 @@
 import 'package:quran/core/repositories/get_code_location_response_model.dart';
 import 'package:quran/core/repositories/get_jadwal_sholat_response_model.dart';
-import 'package:quran/core/services/api_service.dart';
+import 'package:quran/core/services/api_service/api_service.dart';
 
 abstract class PrayRepository {
   Future<List<Lokasi>> getCodeLocation(String location);

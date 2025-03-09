@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quran/core/components/app_top_snackbar.dart';
 import 'package:quran/core/extensions/build_context_ext.dart';
+import 'package:quran/core/services/save_ayat/save_ayat_model.dart';
+import 'package:quran/feature/detail_surah/logic/add_last_read/add_last_read_cubit.dart';
+import 'package:quran/feature/detail_surah/logic/audio_player/audio_player_cubit.dart';
 import 'package:quran/feature/detail_surah/logic/detail_surah/detail_surah_cubit.dart';
+import 'package:quran/feature/home/logic/get_last_read/get_last_read_cubit.dart';
 
 import '../../../core/components/app_shimmer.dart';
 import '../../../core/repositories/get_detail_surah_response_model.dart';
@@ -111,7 +116,30 @@ class DetailSurahView extends StatelessWidget {
           physics: NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             final Ayat ayat = data.ayat![index];
-            return AyahListWidget(ayat: ayat);
+            return BlocListener<AddLastReadCubit, AddLastReadState>(
+              listener: (context, state) {
+                if (state.status == AddLastReadStatus.error) {
+                  AppTopSnackBar(context).showDanger(state.message);
+                }
+
+                if (state.status == AddLastReadStatus.loaded) {
+                  AppTopSnackBar(context).showSuccess(state.message);
+                  context.read<GetLastReadCubit>().getLastRead();
+                }
+              },
+              child: GestureDetector(
+                onLongPress: () {
+                  context.read<AddLastReadCubit>().addLastRead(
+                    SaveAyatModel(
+                      namaSurat: data.namaLatin,
+                      nomorSurat: data.nomor,
+                      nomorAyat: ayat.nomorAyat,
+                    ),
+                  );
+                },
+                child: AyahListWidget(ayat: ayat),
+              ),
+            );
           },
         ),
       );
@@ -143,6 +171,9 @@ class DetailSurahView extends StatelessWidget {
 
           if (state.status == DetailSurahStatus.loaded) {
             final data = state.detailSurah;
+
+            context.read<AudioPlayerCubit>().setAyatList(state.ayat ?? []);
+
             return SingleChildScrollView(
               child: Column(children: [contentHeader(data), contentAyah(data)]),
             );

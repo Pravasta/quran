@@ -3,10 +3,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quran/core/theme/app_color.dart';
 import 'package:quran/feature/splash/logic/counter_bottom_navigation_cubit/counter_bottom_navigation_cubit.dart';
 
+import '../logic/location_init_cubit/location_init_cubit.dart';
 import '../model/main_model.dart';
 
-class MainView extends StatelessWidget {
+class MainView extends StatefulWidget {
   const MainView({super.key});
+
+  @override
+  State<MainView> createState() => _MainViewState();
+}
+
+class _MainViewState extends State<MainView> {
+  @override
+  void initState() {
+    context.read<LocationInitCubit>().getCurrentLocation();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
