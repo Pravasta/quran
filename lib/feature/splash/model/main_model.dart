@@ -1,5 +1,4 @@
 import 'package:quran/core/utils/assets.gen.dart';
-import 'package:quran/feature/bookmark/view/bookmark_page.dart';
 import 'package:quran/feature/home/view/home_page.dart';
 import 'package:quran/feature/pray/view/pray_page.dart';
 
@@ -17,11 +16,11 @@ class MainModel {
       'child': PrayPage(),
       'index': 1,
     },
-    {
-      'icon': Assets.icons.bookmark.path,
-      'label': '',
-      'child': BookmarkPage(),
-      'index': 2,
-    },
+    // {
+    //   'icon': Assets.icons.bookmark.path,
+    //   'label': '',
+    //   'child': BookmarkPage(),
+    //   'index': 2,
+    // },
   ];
 }

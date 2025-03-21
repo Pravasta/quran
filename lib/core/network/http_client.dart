@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 abstract class HttpClient<T> {
@@ -19,6 +21,8 @@ abstract class HttpClient<T> {
     required Map<String, File> files,
     Map<String, String>? fields,
   });
+  Future<Uint8List> getBytesArrayFromUrl(String url);
+  Future<String> downloadAndSaveFile(String url, String fileName);
 }
 
 class CoinsleekHttpClient implements HttpClient {
@@ -134,6 +138,18 @@ class CoinsleekHttpClient implements HttpClient {
       );
     });
     return request.send();
+  }
+
+  @override
+  Future<Uint8List> getBytesArrayFromUrl(String url) async {
+    final response = await http.get(Uri.parse(url));
+    return response.bodyBytes;
+  }
+
+  @override
+  Future<String> downloadAndSaveFile(String url, String fileName) async {
+    final bytes = await getBytesArrayFromUrl(url);
+    return base64Encode(bytes);
   }
 
   factory CoinsleekHttpClient.create() {

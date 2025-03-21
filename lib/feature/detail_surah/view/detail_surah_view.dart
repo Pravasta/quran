@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quran/core/components/app_button.dart';
+import 'package:quran/core/components/app_dialog.dart';
 import 'package:quran/core/components/app_top_snackbar.dart';
 import 'package:quran/core/extensions/build_context_ext.dart';
 import 'package:quran/core/services/save_ayat/save_ayat_model.dart';
@@ -15,14 +17,42 @@ import '../../../core/utils/assets.gen.dart';
 import '../../../main.dart';
 import 'widget/ayah_list_widget.dart';
 
-class DetailSurahView extends StatelessWidget {
+class DetailSurahView extends StatefulWidget {
   const DetailSurahView({super.key});
 
   @override
+  State<DetailSurahView> createState() => _DetailSurahViewState();
+}
+
+class _DetailSurahViewState extends State<DetailSurahView> {
+  final Map<int, GlobalKey> _ayatKeys = {};
+  String? surahName = '';
+
+  void _scrollToLastRead(int lastReadAyat) {
+    Future.delayed(Duration(milliseconds: 300), () {
+      final key = _ayatKeys[lastReadAyat];
+      if (key != null && key.currentContext != null) {
+        Scrollable.ensureVisible(
+          key.currentContext!,
+          duration: Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final lastRead = context.select<GetLastReadCubit, SaveAyatModel?>(
+      (cubit) => cubit.state.lastRead,
+    );
+
     AppBar appBar() {
       return AppBar(
-        title: Text('Detail Surat', style: appTextTheme(context).displaySmall),
+        title: Text(
+          surahName ?? '',
+          style: appTextTheme(context).headlineSmall,
+        ),
         leading: BackButton(color: appColorScheme(context).onPrimary),
       );
     }
@@ -116,6 +146,9 @@ class DetailSurahView extends StatelessWidget {
           physics: NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             final Ayat ayat = data.ayat![index];
+
+            _ayatKeys[ayat.nomorAyat ?? 0] = GlobalKey();
+
             return BlocListener<AddLastReadCubit, AddLastReadState>(
               listener: (context, state) {
                 if (state.status == AddLastReadStatus.error) {
@@ -128,16 +161,48 @@ class DetailSurahView extends StatelessWidget {
                 }
               },
               child: GestureDetector(
-                onLongPress: () {
-                  context.read<AddLastReadCubit>().addLastRead(
-                    SaveAyatModel(
-                      namaSurat: data.namaLatin,
-                      nomorSurat: data.nomor,
-                      nomorAyat: ayat.nomorAyat,
-                    ),
+                onTap: () async {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AppDialog.defaultDialog(
+                        context,
+                        'Add to Last Read? ',
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: DefaultButton(
+                            backgroundColor:
+                                appColorScheme(context).primaryContainer,
+                            borderColor:
+                                appColorScheme(context).primaryContainer,
+                            title: 'Add',
+                            onTap: () {
+                              context.read<AddLastReadCubit>().addLastRead(
+                                SaveAyatModel(
+                                  namaSurat: data.namaLatin,
+                                  nomorSurat: data.nomor,
+                                  nomorAyat: ayat.nomorAyat,
+                                ),
+                              );
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
+                      );
+                    },
                   );
+                  // context.read<AddLastReadCubit>().addLastRead(
+                  //   SaveAyatModel(
+                  //     namaSurat: data.namaLatin,
+                  //     nomorSurat: data.nomor,
+                  //     nomorAyat: ayat.nomorAyat,
+                  //   ),
+                  // );
                 },
-                child: AyahListWidget(ayat: ayat),
+                child: AyahListWidget(
+                  key: _ayatKeys[ayat.nomorAyat],
+                  ayat: ayat,
+                ),
               ),
             );
           },
@@ -171,6 +236,14 @@ class DetailSurahView extends StatelessWidget {
 
           if (state.status == DetailSurahStatus.loaded) {
             final data = state.detailSurah;
+
+            surahName = data!.namaLatin ?? '';
+
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (lastRead != null && lastRead.namaSurat == data.namaLatin) {
+                _scrollToLastRead(lastRead.nomorAyat ?? 0);
+              }
+            });
 
             context.read<AudioPlayerCubit>().setAyatList(state.ayat ?? []);
 

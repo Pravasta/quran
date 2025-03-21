@@ -35,11 +35,11 @@ class LocationServiceImpl implements LocationService {
       print('h ${placemarks[0].subThoroughfare.toString()}');
       print('i ${placemarks[0].thoroughfare.toString()}');
 
-      if (placemarks[0].locality == null) {
-        return placemarks[0].subAdministrativeArea.toString();
-      } else {
-        return placemarks[0].locality.toString();
-      }
+      // if (placemarks[0].locality == null) {
+      //   return placemarks[0].subAdministrativeArea.toString();
+      // } else {
+      return placemarks[0].subAdministrativeArea.toString();
+      // }
     } catch (e) {
       throw e.toString();
     }

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quran/core/logic/notification/notification_cubit.dart';
+import 'package:quran/core/services/notification/local_notification_service.dart';
 import 'package:quran/feature/detail_surah/logic/audio_player/audio_player_cubit.dart';
 import 'package:quran/core/routes/navigation.dart';
 import 'package:quran/core/services/audio_service.dart';
+import 'package:quran/feature/pray/logic/save_scheduled_notification/save_scheduled_notification_cubit.dart';
+import 'package:quran/feature/pray/repository/pray_repository.dart';
 
 import 'core/injection/env.dart';
 import 'core/theme/app_theme.dart';
@@ -51,6 +55,15 @@ class _MyAppState extends State<MyApp> {
         ),
         BlocProvider(
           create: (_) => AddLastReadCubit(DetailSurahRepositoryImpl.create()),
+        ),
+        BlocProvider(
+          create:
+              (_) => NotificationCubit(LocalNotificationServiceImpl.create()),
+        ),
+        BlocProvider(
+          create:
+              (_) =>
+                  SaveScheduledNotificationCubit(PrayRepositoryImpl.create()),
         ),
       ],
       child: MaterialApp(

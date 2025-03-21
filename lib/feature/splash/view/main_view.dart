@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quran/core/logic/notification/notification_cubit.dart';
 import 'package:quran/core/theme/app_color.dart';
 import 'package:quran/feature/splash/logic/counter_bottom_navigation_cubit/counter_bottom_navigation_cubit.dart';
 
@@ -17,6 +18,7 @@ class _MainViewState extends State<MainView> {
   @override
   void initState() {
     context.read<LocationInitCubit>().getCurrentLocation();
+    context.read<NotificationCubit>().requestPermission();
     super.initState();
   }
 

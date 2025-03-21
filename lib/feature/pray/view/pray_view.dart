@@ -3,9 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quran/core/components/app_shimmer.dart';
 import 'package:quran/core/extensions/build_context_ext.dart';
 import 'package:quran/core/extensions/date_time_ext.dart';
+import 'package:quran/core/logic/notification/notification_cubit.dart';
+import 'package:quran/core/repositories/notification_scheduled_request_model.dart';
 import 'package:quran/feature/pray/logic/get_jadwal_sholat_by_location/get_jadwal_sholat_by_location_cubit.dart';
+import 'package:quran/feature/pray/logic/save_scheduled_notification/save_scheduled_notification_cubit.dart';
 import 'package:quran/feature/splash/logic/location_init_cubit/location_init_cubit.dart';
 import 'package:quran/main.dart';
+
+import '../../../core/repositories/get_jadwal_sholat_response_model.dart';
 
 class PrayView extends StatefulWidget {
   const PrayView({super.key});
@@ -85,26 +90,72 @@ class _PrayViewState extends State<PrayView> {
     }
 
     Widget content() {
-      Widget listSchedule(String title, String time) {
-        return Padding(
-          padding: EdgeInsets.symmetric(vertical: 15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(title, style: appTextTheme(context).titleMedium),
-              Row(
+      Widget listSchedule(String title, String time, int index, {Data? data}) {
+        final hour = int.parse(time.split(':').first);
+        final minute = int.parse(time.split(':').last);
+
+        return BlocConsumer<
+          SaveScheduledNotificationCubit,
+          SaveScheduledNotificationState
+        >(
+          builder: (context, state) {
+            bool selectedTitle = state.selectedTitle == title;
+
+            return Padding(
+              padding: EdgeInsets.symmetric(vertical: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(time, style: appTextTheme(context).titleMedium),
-                  SizedBox(width: 10),
-                  Icon(
-                    Icons.alarm_add_outlined,
-                    color: appColorScheme(context).secondary,
-                    size: 30,
+                  Text(title, style: appTextTheme(context).titleMedium),
+                  Row(
+                    children: [
+                      Text(time, style: appTextTheme(context).titleMedium),
+                      SizedBox(width: 10),
+                      GestureDetector(
+                        onTap: () {
+                          if (selectedTitle && state.isScheduled) {
+                            context
+                                .read<NotificationCubit>()
+                                .cancelScheduledNotification(data?.id ?? 0);
+                            context
+                                .read<SaveScheduledNotificationCubit>()
+                                .cancelScheduledNotification(title);
+                          } else {
+                            context
+                                .read<NotificationCubit>()
+                                .showScheduledNotification(
+                                  NotificationScheduledRequestModel(
+                                    id: data?.id ?? 0,
+                                    title: 'Waktunya Sholat $title',
+                                    body: 'Sudah waktunya sholat $title',
+                                    payload: 'payload',
+                                    hour: hour,
+                                    minute: minute,
+                                  ),
+                                );
+                            context
+                                .read<SaveScheduledNotificationCubit>()
+                                .saveScheduledNotification(title, title);
+                          }
+                        },
+                        child: Icon(
+                          (selectedTitle && state.isScheduled)
+                              ? Icons.icecream_outlined
+                              : Icons.alarm_add_outlined,
+                          color:
+                              (selectedTitle && state.isScheduled)
+                                  ? appColorScheme(context).primary
+                                  : appColorScheme(context).secondary,
+                          size: 30,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
-          ),
+            );
+          },
+          listener: (context, state) {},
         );
       }
 
@@ -131,7 +182,7 @@ class _PrayViewState extends State<PrayView> {
           }
 
           if (state.status == GetJadwalSholatByLocationStatus.loaded) {
-            final data = state.data?.jadwal;
+            final data = state.data;
 
             return Container(
               padding: EdgeInsets.symmetric(horizontal: 10),
@@ -141,13 +192,13 @@ class _PrayViewState extends State<PrayView> {
               ),
               child: Column(
                 children: [
-                  listSchedule('Imsak', data!.imsak ?? ''),
-                  listSchedule('Subuh', data.subuh ?? ''),
-                  listSchedule('Terbit', data.terbit ?? ''),
-                  listSchedule('Dzuhur', data.dzuhur ?? ''),
-                  listSchedule('Ashar', data.ashar ?? ''),
-                  listSchedule('Maghrib', data.maghrib ?? ''),
-                  listSchedule('Isya', data.isya ?? ''),
+                  listSchedule('Imsak', '14:59', 0, data: data),
+                  listSchedule('Subuh', '15:00', 1, data: data),
+                  listSchedule('Terbit', '15:01', 2, data: data),
+                  listSchedule('Dzuhur', '15:03', 3, data: data),
+                  listSchedule('Ashar', '15:05', 4, data: data),
+                  listSchedule('Maghrib', '15:07', 5, data: data),
+                  listSchedule('Isya', '15:09', 6, data: data),
                 ],
               ),
             );

@@ -11,7 +11,6 @@ class PrayPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<LocationInitCubit>();
-    print('bloc : ${bloc.state.data?.location ?? ''}');
 
     return BlocProvider(
       create:
